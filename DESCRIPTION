@@ -3,8 +3,24 @@ Type: Package
 Title: Utilities for Exploration and Assessment of Confidence of
     LC-MSn Proteomics Identifications
 Version: 1.25.1
-Author: Vlad Petyuk with contributions from Laurent Gatto
-Maintainer: Vlad Petyuk <petyuk@gmail.com>
+Authors@R: c(person(given = "Vladislav", family = "Petyuk",
+                    email = "vladislav.petyuk@pnnl.gov",
+                    comment = c(ORCID = "0000-0003-4076-151X"),
+                    role = c("aut", "cre")),
+             person(given = "Laurent", family = "Gatto",
+                    email = "laurent.gatto@uclouvain.be",
+                    comment = c(ORCID = "0000-0002-1520-2268"),
+                    role = c("ctb")),
+             person(given = "Michael", family = "Nestor",
+                    email = "michael.nestor@pnnl.gov",
+                    role = c("ctb")),
+             person(given = "Jamie", family = "Moon",
+                    email = "jamie.moon@pnnl.gov",
+                    role = c("ctb")),
+             person(given = "Colin", family = "Brislawn",
+                    email = "colin.brislawn@pnnl.gov",
+                    role = c("ctb")))
+Maintainer: Vlad Petyuk <vladislav.petyuk@pnnl.gov>
 Description: Extracts MS/MS ID data from mzIdentML (leveraging mzID package) or
     text files. After collating the search results from multiple datasets it
     assesses their identification quality and optimize filtering criteria to
