@@ -3,12 +3,10 @@
 on:
   push:
     branches:
-      - main
       - master
       - pnnl-master
   pull_request:
     branches:
-      - main
       - master
       - pnnl-master
 
@@ -67,6 +65,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+          install.packages('tinytex')
           remotes::install_deps(dependencies = TRUE)
           remotes::install_cran("rcmdcheck")
         shell: Rscript {0}
