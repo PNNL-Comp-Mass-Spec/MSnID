@@ -45,9 +45,9 @@ jobs:
 
       - uses: r-lib/actions/setup-pandoc@v1
       
-      - name: add TeX deps
+      - name: Install TinyTex
         run: |
-          tinytex::tlmgr_install(pkgs = "name")
+          install.packages('tinytex')
         shell: Rscript {0}
 
       - name: Query dependencies
