@@ -39,3 +39,4 @@ Imports: MSnbase (>= 1.12.1), mzID (>= 1.3.5), R.cache,
 Suggests: 
 LazyData: yes
 biocViews: Proteomics, MassSpectrometry, ImmunoOncology
+RoxygenNote: 7.1.1
