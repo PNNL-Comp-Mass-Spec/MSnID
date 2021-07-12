@@ -73,7 +73,7 @@ utils::globalVariables(c("Last_AA_First",
                       ymin = -0.04, ymax = +0.04)) +
         geom_rect(aes_string(xmin="First_AA", xmax="Last_AA", 
                              ymin="ymin", ymax="ymax", 
-                             fill=ifelse(is.null(peptide_fill), "n", color_by)),
+                             fill=ifelse(is.null(peptide_fill), "n", peptide_fill)),
                   color="white", size=1)
     
     if (is.null(peptide_fill)) {
