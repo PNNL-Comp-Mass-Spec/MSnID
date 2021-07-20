@@ -1,5 +1,5 @@
 %\VignetteIndexEntry{Handling Modifications with MSnID}
-%\VignetteDepends{BiocStyle, ggplot2}
+%\VignetteDepends{BiocStyle, ggplot2, PlexedPiper}
 %\VignetteKeywords{Documentation}
 %\VignettePackage{MSnID}
 \documentclass[11pt]{article}
@@ -15,6 +15,7 @@ library(MSnID)
 library(xtable)
 library(dplyr)
 library(Biostrings)
+library(PlexedPiper)
 @
 
 \title{Handling Modifications with \Rpackage{MSnID}}
