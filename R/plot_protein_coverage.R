@@ -74,15 +74,13 @@ utils::globalVariables(c("Last_AA_First",
     
     
     prot$ymax <- prot$ymin + width_y
-    other_cols <- c("First_AA", "Last_AA", "Length", "ymin", "ymax")
     p <-
         ggplot(data = prot) +
         geom_rect(aes(xmin = 0, xmax = prot_len + 2, 
                       ymin = -0.04, ymax = +0.04)) +
-        geom_rect(aes_string(xmin = "First_AA", xmax = "Last_AA", 
-                      ymin = "ymin", ymax = "ymax", 
-                      fill = colnames(prot)[!(colnames(prot) %in% 
-                                                other_cols)]),
+        geom_rect(aes(xmin = First_AA, xmax = Last_AA, 
+                      ymin = ymin, ymax = ymax, 
+                      fill = !!peptide_fill),
                   color = "white", size = 1)
   
     if (peptide_fill %in% c("sample.counts", "spectral.counts")) {
@@ -139,7 +137,7 @@ generate_counts <- function(x, type) {
   }
   x <- x %>% 
     mutate(Length = Last_AA - First_AA + 1) %>%
-    arrange(First_AA, -Length)
+    arrange(First_AA, -Length, -!!type)
   
   return(x)
 }
