@@ -10,7 +10,7 @@ Shows the peptide location(s) on the protein sequence.
 \usage{
     plot_protein_coverage(object, 
                           accession, 
-                          peptide_fill = NULL,
+                          peptide_fill = "spectral.counts",
                           %save_plot = FALSE,
                           ...)
 }
@@ -24,8 +24,8 @@ Shows the peptide location(s) on the protein sequence.
         (string) accession name.
     }
     \item{peptide_fill}{
-        (string) column in \code{psms(object)} used to fill the peptide bars. If
-        \code{NULL} (the default), bars will be colored according to spectral counts.
+        (string) "spectral.counts", "sample.counts", or a column from 
+        \code{psms(object)} used to fill the peptide bars.
     }
     \item{...}{
         Used for passing save_plot. If \code{TRUE}, then image is saved as a 

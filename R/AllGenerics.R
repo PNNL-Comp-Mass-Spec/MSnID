@@ -107,7 +107,7 @@ setGeneric("psms<-",
 
 
 setGeneric("plot_protein_coverage",
-           function(object, accession, ...) 
+           function(object, accession, peptide_fill = "spectral.counts", ...) 
                standardGeneric("plot_protein_coverage"))
 
 

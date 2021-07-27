@@ -13,30 +13,37 @@ utils::globalVariables(c("Last_AA_First",
 
 .plot_protein_coverage <- function(object, 
                                    accession, 
-                                   peptide_fill = NULL, 
+                                   peptide_fill = "spectral.counts", 
                                    save_plot = FALSE, 
                                    ...){
     
+    # Check that peptide_fill is valid
+    if (!(peptide_fill %in% c(colnames(psms(object)), 
+                              "spectral.counts", "sample.counts"))) {
+        stop(paste("peptide_fill must be 'spectral.counts', 'sample.counts',",
+                   "or a column in psms(object)."))
+    } else {
+        if (peptide_fill == "sample.counts") {
+            if (!("Dataset" %in% colnames(psms(object)))) {
+                stop(paste("If peptide_fill = 'sample.counts', 'Dataset' must",
+                           "be a column in psms(object)."))
+            }
+        }
+    }
+    
     x <- psms(object) %>%
+        filter(accession == !!accession) %>%
         select(-c(First_AA, Last_AA)) %>%
         dplyr::rename(Last_AA = Last_AA_First,
                       First_AA = First_AA_First)
     
-    prot_len <- filter(x, accession == !!accession) %>% 
+    prot_len <- x %>% 
         distinct(ProtLen) %>% 
         as.numeric()
     
     prot_name <- accession
     
-    prot <- x %>%
-        filter(accession == !!accession) %>%
-        # dplyr::rename(`First_residue` = `First residue`) %>%
-        # dplyr::rename(`Last_residue` = `Last residue`) %>%
-        group_by_at(vars(c("First_AA", "Last_AA", all_of(peptide_fill)))) %>%
-        tally() %>%
-        ungroup() %>%
-        mutate(Length = Last_AA - First_AA + 1) %>%
-        arrange(First_AA, -Length, -n)
+    prot <- generate_counts(x, type = peptide_fill)
     
     
     # setting staggered ymin
@@ -71,15 +78,11 @@ utils::globalVariables(c("Last_AA_First",
         ggplot(data = prot) +
         geom_rect(aes(xmin = 0, xmax = prot_len + 2, 
                       ymin = -0.04, ymax = +0.04)) +
-        geom_rect(aes_string(xmin="First_AA", xmax="Last_AA", 
-                             ymin="ymin", ymax="ymax", 
-                             fill=ifelse(is.null(peptide_fill), "n", peptide_fill)),
-                  color="white", size=1)
-    
-    if (is.null(peptide_fill)) {
-        p <- p +
+        geom_rect(aes(xmin = First_AA, xmax = Last_AA, 
+                      ymin = ymin, ymax = ymax, 
+                      fill = n),
+                  color = "white", size = 1) +
             scale_fill_viridis_c(option = "D")
-    }
     
     p <- p +    
         ylab(NULL) +
@@ -109,5 +112,27 @@ utils::globalVariables(c("Last_AA_First",
 
 
 
-
+## Helper function to generate spectral or sample counts
+generate_counts <- function(x, type) {
+    if (type == "sample.counts") {
+        # Sample counts
+        x <- x %>% 
+            distinct(First_AA, Last_AA, Dataset)
+    } else if (!(type %in% c("sample.counts", "spectral.counts"))) {
+        # Other column in psms(object)
+        x <- x %>%
+            # Forced evaluation doesn't work with distinct()
+            select(First_AA, Last_AA, !!type) %>%
+            distinct()
+    }
+    # This is done regardless of the value of "type".
+    # If type == "spectral.counts", this gets the spectral counts.
+    x <- x  %>%
+        group_by(First_AA, Last_AA) %>%
+        tally() %>% 
+        ungroup() %>%
+        mutate(Length = Last_AA - First_AA + 1)
+    
+    return(x)
+}
 
