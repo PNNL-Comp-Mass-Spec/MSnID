@@ -137,7 +137,7 @@ generate_counts <- function(x, type) {
   }
   x <- x %>% 
     mutate(Length = Last_AA - First_AA + 1) %>%
-    arrange(First_AA, -Length, -!!type)
+    arrange(First_AA, -Length, desc(!!type))
   
   return(x)
 }
