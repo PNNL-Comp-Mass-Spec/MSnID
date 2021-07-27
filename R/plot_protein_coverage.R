@@ -5,7 +5,6 @@ utils::globalVariables(c("Last_AA_First",
                          "First_AA_First",
                          "ProtLen",
                          "Length",
-                         "n",
                          "ymin",
                          "ymax"))
 
@@ -37,14 +36,11 @@ utils::globalVariables(c("Last_AA_First",
         dplyr::rename(Last_AA = Last_AA_First,
                       First_AA = First_AA_First)
     
-    prot_len <- x %>% 
-        distinct(ProtLen) %>% 
-        as.numeric()
+    prot_len <- unique(x$ProtLen)
     
     prot_name <- accession
     
     prot <- generate_counts(x, type = peptide_fill)
-    
     
     # setting staggered ymin
     min_y <- 0.1
@@ -80,7 +76,7 @@ utils::globalVariables(c("Last_AA_First",
                       ymin = -0.04, ymax = +0.04)) +
         geom_rect(aes(xmin = First_AA, xmax = Last_AA, 
                       ymin = ymin, ymax = ymax, 
-                      fill = !!peptide_fill),
+                      fill = !!sym(peptide_fill)),
                   color = "white", size = 1)
   
     if (peptide_fill %in% c("sample.counts", "spectral.counts")) {
@@ -137,7 +133,7 @@ generate_counts <- function(x, type) {
   }
   x <- x %>% 
     mutate(Length = Last_AA - First_AA + 1) %>%
-    arrange(First_AA, -Length, -!!type)
+    arrange(First_AA, -Length)
   
   return(x)
 }
