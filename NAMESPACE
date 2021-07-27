@@ -13,7 +13,7 @@ importFrom("tibble", "rownames_to_column")
 importFrom("stringi", "stri_reverse")
 importFrom("stringr", "str_sub", "str_replace_all","str_locate_all", 
            "str_detect", "str_length")
-importFrom("ggplot2", "ggplot", "aes", "geom_rect", "scale_fill_viridis_c",
+importFrom("ggplot2", "ggplot", "aes", "aes_string", "geom_rect", "scale_fill_viridis_c",
            "ggtitle", "ggsave", "ylab", "xlab", "theme_classic", "theme",
            "scale_x_continuous", "element_blank", "element_text", "ylim")
 importFrom("IRanges", "IRanges", "IRangesList", "width", "reduce")
