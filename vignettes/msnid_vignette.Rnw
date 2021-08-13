@@ -6,7 +6,7 @@
 
 
 <<style, eval=TRUE, echo=FALSE, results=tex>>=
-BiocStyle::latex(use.unsrturl=FALSE)
+BiocStyle::latex(use.unsrturl=FALSE, relative.path = TRUE)
 @
 
 

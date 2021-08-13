@@ -1,12 +1,12 @@
 %\VignetteIndexEntry{Handling Modifications with MSnID}
-%\VignetteDepends{BiocStyle, ggplot2, PlexedPiper}
+%\VignetteDepends{BiocStyle, ggplot2}
 %\VignetteKeywords{Documentation}
 %\VignettePackage{MSnID}
 \documentclass[11pt]{article}
 
 
 <<style, eval=TRUE, echo=FALSE, results=tex>>=
-BiocStyle::latex(use.unsrturl=FALSE)
+BiocStyle::latex(use.unsrturl=FALSE, relative.path = TRUE)
 @
 
 
