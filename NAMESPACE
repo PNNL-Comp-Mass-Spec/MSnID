@@ -28,7 +28,8 @@ importFrom("mzID", "mzID")
 importFrom("mzR","openIDfile","score","modifications","fileName")
 importMethodsFrom("mzID", "flatten")
 importFrom("parallel", "mclapply", "detectCores","makeCluster",
-           "stopCluster","parLapply","clusterExport","clusterEvalQ")
+           "stopCluster","parLapply","clusterExport","clusterEvalQ",
+           "clusterSplit", "clusterApply")
 importClassesFrom("MSnbase", "MSnSet")
 importClassesFrom("Biobase", "AnnotatedDataFrame")
 importFrom("stats", "quantile","rnorm","optim", "median", "density", "complete.cases")
