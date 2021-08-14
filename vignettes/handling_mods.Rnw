@@ -15,7 +15,6 @@ library(MSnID)
 library(xtable)
 library(dplyr)
 library(Biostrings)
-library(PlexedPiper)
 @
 
 \title{Handling Modifications with \Rpackage{MSnID}}
