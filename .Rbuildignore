@@ -5,3 +5,6 @@
 README.md
 \.gitignore
 ^\.github$
+^doc$
+^Meta$
+^.Rcache

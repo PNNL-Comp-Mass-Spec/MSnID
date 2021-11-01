@@ -91,7 +91,7 @@ utils::globalVariables(c("Last_AA_First",
           axis.line.y = element_blank(),
           axis.line.x = element_blank()) +
     # scale_x_continuous(breaks = seq(0,prot_len,20)) +
-    scale_x_continuous(breaks = pretty_breaks()) +
+    scale_x_continuous(breaks = breaks_pretty(n = 30)(seq(0, prot_len + 2, 20))) +
     theme(axis.text.x = element_text(angle=90, hjust = 1, vjust = 0.5),
           plot.title = element_text(hjust = 0.5, size=16)) +
     ggtitle(prot_name)

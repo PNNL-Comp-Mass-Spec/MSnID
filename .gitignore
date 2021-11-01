@@ -12,3 +12,5 @@ MSnID.Rproj
 /inst/.DS_Store
 /inst/doc/.DS_Store
 /.Rcache
+/doc/
+/Meta/

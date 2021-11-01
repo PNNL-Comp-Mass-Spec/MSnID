@@ -21,7 +21,10 @@ msnidObj
 \dontrun{
 ## How to download the example mzID file from PeptideAltas:
 try(setInternet2(FALSE),silent=TRUE)
-ftp.loc <- "ftp://PASS00308:PJ5348t@ftp.peptideatlas.org/MSGFPlus_Results/MZID_Files/c_elegans_A_3_1_21Apr10_Draco_10-03-04_msgfplus.mzid.gz"
+ftp.loc <- 
+  file.path("ftp://PASS00308:PJ5348t@ftp.peptideatlas.org", 
+            "MSGFPlus_Results/MZID_Files", 
+            "c_elegans_A_3_1_21Apr10_Draco_10-03-04_msgfplus.mzid.gz")
 download.file(ftp.loc, "c_elegans.mzid.gz")}
 
 \dontrun{

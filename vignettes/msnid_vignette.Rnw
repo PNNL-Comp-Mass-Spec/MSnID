@@ -6,7 +6,7 @@
 
 
 <<style, eval=TRUE, echo=FALSE, results=tex>>=
-BiocStyle::latex(use.unsrturl=FALSE)
+BiocStyle::latex(use.unsrturl=FALSE, relative.path = TRUE)
 @
 
 
@@ -492,7 +492,7 @@ head(exprs(msnset))
 unlink(".Rcache", recursive=TRUE)
 @
 
-
+\pagebreak
 \bibliographystyle{plainnat}
 \bibliography{msnid}
 \end{document}
