@@ -36,6 +36,10 @@ utils::globalVariables(c("Last_AA_First",
     dplyr::rename(Last_AA = Last_AA_First,
                   First_AA = First_AA_First)
   
+  # remove non-mapped peptides for now
+  x <- x %>%
+    filter(!is.na(First_AA) & !is.na(Last_AA))
+  
   prot_len <- unique(x$ProtLen)
   
   prot_name <- accession
