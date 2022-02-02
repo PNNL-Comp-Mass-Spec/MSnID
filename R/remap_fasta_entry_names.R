@@ -7,11 +7,11 @@ remap_fasta_entry_names <- function(path_to_FASTA,
                                                        "([A-Z]P_\\d+)",
                                                        "(ENS[A-Z0-9]+)")){
     
-    is_compressed <- FALSE
-    if(grepl("[.]gz$", path_to_FASTA)){
-        is_compressed <- TRUE
-    }else if(grepl("[.](bz2|xz|zip)$", path_to_FASTA)){
+    # Check for compression
+    if (grepl("[.](bz2|xz|zip)$", path_to_FASTA)) {
         stop("The only supported compression is gzip!")
+    } else {
+        is_compressed <- grepl("[.]gz$", path_to_FASTA)
     }
     
     mySequences <- readAAStringSet(path_to_FASTA)
@@ -42,10 +42,7 @@ remap_fasta_entry_names <- function(path_to_FASTA,
     mySequences <- mySequences[names(conversion_vec)]
     names(mySequences) <- conversion_vec[names(mySequences)]
     
-    file_no_ext <- tools::file_path_sans_ext(path_to_FASTA, compression=TRUE)
-    ext <- sub(file_no_ext, "", path_to_FASTA, fixed=TRUE)
-    
-    path_to_FASTA_remapped <- paste0(file_no_ext, '_remapped', ext)
+    path_to_FASTA_remapped <- gsub("\\.fasta.*", "_remapped.fasta", path_to_FASTA)
     
     writeXStringSet(mySequences, path_to_FASTA_remapped, compress = is_compressed)
     return(path_to_FASTA_remapped)
