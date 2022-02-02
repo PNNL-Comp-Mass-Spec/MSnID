@@ -1,29 +1,38 @@
-parse_FASTA_names <- function(FASTA_names) {
+
+
+parse_FASTA_names <- function(path_to_FASTA) {
   
-  # Regex is limited to 9 groups, so gene, protein existence, 
-  # and sequence version are grouped together and then split
-  pttrn <- paste0("([a-z]{2})\\|([^-]+)\\-?([0-9]+)?\\|(.*_[A-Z]+)",
-                  "\\s(.+?)\\sOS=(.*)\\sOX=(\\d+)\\s(.*)$")
+  # Get FASTA headers
+  fasta_names <- names(readAAStringSet(path_to_FASTA))
   
-  x <- data.frame(
-    database = sub(pttrn, "\\1", FASTA_names),
-    uniprot_acc = sub(pttrn, "\\2", FASTA_names),
-    isoform = sub(pttrn, "\\3", FASTA_names),
-    entry_name = sub(pttrn, "\\4", FASTA_names),
-    description = sub(pttrn, "\\5", FASTA_names),
-    organism = sub(pttrn, "\\6", FASTA_names),
-    organism_id = sub(pttrn, "\\7", FASTA_names),
-    gene = sub("GN=", "", 
-               str_extract(sub(pttrn, "\\8", 
-                               FASTA_names), "GN=[^\\s]+")),
-    protein_existence = sub("PE=", "", 
-                            str_extract(sub(pttrn, "\\8", 
-                                            FASTA_names), "PE=\\d+")),
-    sequence_version = sub("SV=", "", 
-                           str_extract(sub(pttrn, "\\8", 
-                                           FASTA_names), "SV=\\d+"))
-  )
+  # Pattern for first 6 columns
+  pttrn <- "(.*)\\|(.*)\\|([^ ]+) (.*) OS=(.*) OX=(\\d+).*"
+  
+  x <- data.frame(database = sub(pttrn, "\\1", fasta_names),
+                  uniprot_acc = sub(pttrn, "\\2", fasta_names),
+                  entry_name = sub(pttrn, "\\3", fasta_names),
+                  description = sub(pttrn, "\\4", fasta_names),
+                  organism = sub(pttrn, "\\5", fasta_names),
+                  organism_id = sub(pttrn, "\\6", fasta_names),
+                  # These last 3 may not be present, so we use separate regex
+                  gene = sub(".* GN=([^ ]+).*", "\\1", fasta_names),
+                  protein_existence = sub(".* PE=(\\d+).*", "\\1", fasta_names),
+                  sequence_version = sub(".* SV=(\\d+)$", "\\1", fasta_names)
+  ) %>% 
+    mutate(isoform = str_extract(uniprot_acc, "(?<=-)\\d+"),
+           uniprot_acc = sub("-.*", "", uniprot_acc),
+           # By default, a failed match uses the original string. 
+           # Replace with NA
+           across(.cols = everything(),
+                  .fns = ~ ifelse(.x == fasta_names, NA, .x))) %>% 
+    # Remove entries that do not follow the format (no database entry)
+    dplyr::filter(!is.na(database)) %>% 
+    # Reorder columns
+    dplyr::select(database, uniprot_acc, isoform, everything())
   
   return(x)
 }
+
+
+utils::globalVariables(c("uniprot_acc", "database", "isoform"))
 

@@ -6,29 +6,24 @@ Create table from UniProt FASTA headers
 }
 
 \description{
-Separate elements of UniProt FASTA names into columns of a data frame.
+Separate the elements of UniProt FASTA headers into columns of a data.frame.
 }
 
-\usage{parse_FASTA_names(FASTA_names)}
+\usage{parse_FASTA_names(path_to_FASTA)}
 
 \arguments{
-  \item{FASTA_names}{UniProt FASTA headers}
+  \item{path_to_FASTA}{(character) Path to UniProt FASTA file.}
 }
 
 \value{
-data frame with the following columns: database, uniprot_acc, isoform, entry_name, description, organism, organism_id, gene, protein_existence, and sequence_version.
+\code{data.frame} with the following columns: database, uniprot_acc, isoform, entry_name, description, organism, organism_id, gene, protein_existence, and sequence_version.
 }
 
-\note{
-See \href{https://www.uniprot.org/help/fasta-headers}{https://www.uniprot.org/help/fasta-headers} for more info.
+\seealso{
+\href{https://www.uniprot.org/help/fasta-headers}{UniProt FASTA headers}
 }
 
-\examples{
-\dontrun{
-library(Biostrings)
-# Need path_to_FASTA
-fst <- readAAStringSet(path_to_FASTA)
-FASTA_tbl <- parse_FASTA_names(names(fst))
-}
+\author{
+Tyler Sagendorf
 }
 
