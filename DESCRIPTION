@@ -18,6 +18,10 @@ Authors@R: c(person(given = "Vladislav", family = "Petyuk",
              person(given = "Jamie", family = "Moon",
                     email = "jamie.moon@pnnl.gov",
                     role = c("ctb")),
+             person(given = "Tyler", family = "Sagendorf",
+                    email = "tyler.sagendorf@pnnl.gov",
+                    comment = c(ORCID = "0000-0003-1552-4870"),
+                    role = c("ctb")),
              person(given = "Colin", family = "Brislawn",
                     email = "colin.brislawn@pnnl.gov",
                     role = c("ctb")))
@@ -40,3 +44,4 @@ Imports: MSnbase (>= 1.12.1), mzID (>= 1.3.5), R.cache,
 Suggests: BiocGenerics, BiocStyle, RUnit, msmsTests, xtable
 LazyData: yes
 biocViews: Proteomics, MassSpectrometry, ImmunoOncology
+RoxygenNote: 7.1.2
