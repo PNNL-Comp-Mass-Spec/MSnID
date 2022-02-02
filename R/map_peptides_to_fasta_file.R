@@ -5,7 +5,7 @@
 #' data frame containing all matches.
 #' 
 #' @param peptides (character) vector of clean peptide sequences.
-#' @param fst (AAStringSet object)
+#' @param fasta (AAStringSet object)
 #' @param numCores (numeric) number of copies of \R to run in parallel.
 #' 
 #' @return (data.frame) with two columns for peptide and accession
@@ -26,18 +26,18 @@
 #' 
 #' path_to_FASTA <- system.file("extdata", "for_phospho.fasta.gz", 
 #'                              package = "MSnID")
-#' fst <- Biostrings::readAAStringSet(path_to_FASTA)
+#' fasta <- Biostrings::readAAStringSet(path_to_FASTA)
 #' 
-#' out <- map_peptides_to_fasta_file(peptides, fst, numCores = 2L)
+#' out <- map_peptides_to_fasta_file(peptides, fasta, numCores = 2L)
 
 
 #' @export
-map_peptides_to_fasta_file <- function(peptides, fst, 
+map_peptides_to_fasta_file <- function(peptides, fasta, 
                                        numCores = detectCores() - 1) 
 {
 
-  fasta.df <- data.frame(accession = names(fst),
-                         sequence = fst,
+  fasta.df <- data.frame(accession = names(fasta),
+                         sequence = fasta,
                          row.names = NULL)
   
   cl <- makeCluster(getOption("cl.cores", numCores))

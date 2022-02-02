@@ -4,12 +4,12 @@
 \alias{map_peptides_to_fasta_file}
 \title{Map peptides to FASTA file}
 \usage{
-map_peptides_to_fasta_file(peptides, fst, numCores = detectCores() - 1)
+map_peptides_to_fasta_file(peptides, fasta, numCores = detectCores() - 1)
 }
 \arguments{
 \item{peptides}{(character) vector of clean peptide sequences.}
 
-\item{fst}{(AAStringSet object)}
+\item{fasta}{(AAStringSet object)}
 
 \item{numCores}{(numeric) number of copies of \R to run in parallel.}
 }
@@ -29,9 +29,9 @@ peptides <- peptides(msnid)
 
 path_to_FASTA <- system.file("extdata", "for_phospho.fasta.gz", 
                              package = "MSnID")
-fst <- Biostrings::readAAStringSet(path_to_FASTA)
+fasta <- Biostrings::readAAStringSet(path_to_FASTA)
 
-out <- map_peptides_to_fasta_file(peptides, fst, numCores = 2L)
+out <- map_peptides_to_fasta_file(peptides, fasta, numCores = 2L)
 }
 \author{
 Michael Nestor
