@@ -21,6 +21,16 @@
     fasta <- c(fasta, fasta_rev)
   }
   
+  # check if fasta entry names are unique
+  if(any(duplicated(names(fasta)))) {
+    stop("FASTA entry names are not unique!\n")
+  }
+  
+  # check if there is at least some agreement in IDs
+  if (!all(object[[accession_col]] %in% names(fasta))) {
+    stop("Some accession IDs not found in FASTA entries!\n")
+  }
+  
   # Reduce fasta to relevant accessions and create data.table
   fasta <- fasta[names(fasta) %in% msms.dt[[accession_col]]]
   fasta.dt <- data.table(width = width(fasta), 
