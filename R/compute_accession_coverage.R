@@ -17,7 +17,8 @@ get_coverage_for_single_accession <- function(accession_i, ids, fasta, pepSeq_co
        start <- as.numeric(mtch)
        width <- attr(mtch, "match.length")
        tgt <- IRanges(start=start, width=width, names=pepSeq_j)
-       irl[[j]] <- tgt
+       # irl[[j]] <- tgt
+       irl <- c(irl, list(tgt))
     }
   }
   
