@@ -28,6 +28,10 @@ parse_FASTA_names <- function(path_to_FASTA) {
                   .fns = ~ ifelse(.x == fasta_names, NA, .x))) %>% 
     # Remove entries that do not follow the format (no database entry)
     dplyr::filter(!is.na(database)) %>% 
+    # Convert these columns from character to numeric
+    mutate(across(.cols = c(isoform, protein_existence, 
+                            sequence_version, organism_id),
+                  .fns = as.numeric)) %>% 
     # Reorder columns
     dplyr::select(feature, database, uniprot_acc, isoform, everything())
   
