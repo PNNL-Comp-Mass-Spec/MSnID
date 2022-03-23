@@ -21,8 +21,7 @@ Given a list of accession and peptide pairs, computes the proportion of amino ac
     }
     \item{fasta}{
         (AAStringSet object) Protein sequences read from a FASTA file.
-        Names must match protein/accesison IDs in the accesson column
-        of the MSnID object.
+        Names must match the accessions of the MSnID object.
     }
     \item{accession_col}{
         (character) Name of the accession column.
@@ -33,32 +32,34 @@ Given a list of accession and peptide pairs, computes the proportion of amino ac
 }
 
 \value{
-    MSnID object with an extra column \code{percentAAcoverage} with values in 0-100.
+An object of class MSnID with additional column `percentAACoverage` that contains values in 0-100.
 }
 
 \author{
-    Michael Nestor \email{michael.nestor@pnnl.gov}
+Tyler Sagendorf, Michael Nestor
 }
 
 
 \examples{
+# Create MSnID object
 m <- MSnID(".")
-mzids <- system.file("extdata","phospho.mzid.gz",package="MSnID")
+mzids <- system.file("extdata", "phospho.mzid.gz", package = "MSnID")
 m <- read_mzIDs(m, mzids)
 
-# read fasta
-fst_path <- system.file("extdata","for_phospho.fasta.gz",package="MSnID")
-library(Biostrings)
-fst <- readAAStringSet(fst_path)
+# Get protein sequences
+fst_path <- system.file("extdata", "for_phospho.fasta.gz", package = "MSnID")
+fst <- Biostrings::readAAStringSet(fst_path)
 
-# remove decoy because they are not in this small fasta file
+# Remove decoys because they are not in this small FASTA file
 m <- apply_filter(m, "!isDecoy")
-# compute accession coverage
+
+# Compute accession coverage
 m <- compute_accession_coverage(m, fst)
 
-head(unique(subset(psms(m), select=c("accession", "percentAACoverage"))))
+head(unique(subset(psms(m), select = c("accession", "percentAACoverage"))))
 
-# clean-up cache
+# Clean-up cache
 unlink(".Rcache", recursive=TRUE)
 }
+
 
