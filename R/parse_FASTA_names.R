@@ -8,7 +8,8 @@ parse_FASTA_names <- function(path_to_FASTA) {
   # Pattern for first 6 columns
   pttrn <- "(.*)\\|(.*)\\|([^ ]+) (.*) OS=(.*) OX=(\\d+).*"
   
-  x <- data.frame(database = sub(pttrn, "\\1", fasta_names),
+  x <- data.frame(feature = sub(" .*", "", fasta_names),
+                  database = sub(pttrn, "\\1", fasta_names),
                   uniprot_acc = sub(pttrn, "\\2", fasta_names),
                   entry_name = sub(pttrn, "\\3", fasta_names),
                   description = sub(pttrn, "\\4", fasta_names),
@@ -28,11 +29,11 @@ parse_FASTA_names <- function(path_to_FASTA) {
     # Remove entries that do not follow the format (no database entry)
     dplyr::filter(!is.na(database)) %>% 
     # Reorder columns
-    dplyr::select(database, uniprot_acc, isoform, everything())
+    dplyr::select(feature, database, uniprot_acc, isoform, everything())
   
   return(x)
 }
 
 
-utils::globalVariables(c("uniprot_acc", "database", "isoform"))
+utils::globalVariables(c("uniprot_acc", "database", "isoform", "feature"))
 
