@@ -39,5 +39,7 @@ parse_FASTA_names <- function(path_to_FASTA) {
 }
 
 
-utils::globalVariables(c("uniprot_acc", "database", "isoform", "feature"))
+utils::globalVariables(c("uniprot_acc", "database", "isoform", "feature",
+                         "protein_existence", "sequence_version", 
+                         "organism_id"))
 
