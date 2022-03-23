@@ -20,6 +20,7 @@ if (!require("remotes", quietly = TRUE))
     install.packages("remotes")
 remotes::install_github("PNNL-Comp-Mass-Spec/MSnID@pnnl-master")
 
+# Usage
 library(MSnID)
 ```
 
