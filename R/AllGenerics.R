@@ -52,7 +52,10 @@ setGeneric("compute_accession_coverage",
 
 
 setGeneric("infer_parsimonious_accessions",
-           function(object, unique_only=FALSE, prior=character(0)) 
+           function(object, 
+                    unique_only=FALSE, 
+                    prior=character(0),
+                    refine_prior=FALSE) 
                standardGeneric("infer_parsimonious_accessions"))
 
 
