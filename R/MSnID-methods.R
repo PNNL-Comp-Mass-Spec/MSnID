@@ -578,7 +578,10 @@ setAs("MSnID", "MSnSet",
 utils::globalVariables(c("accession", "N", "pepSeq", "num"))
 
 setMethod("infer_parsimonious_accessions", "MSnID",
-          definition=function(object, unique_only=FALSE, prior=character(0))
+          definition=function(object, 
+                              unique_only=FALSE, 
+                              prior=character(0),
+                              refine_prior=FALSE)
           {
               infer_acc <- function(x){
                   res <- list()
@@ -613,6 +616,12 @@ setMethod("infer_parsimonious_accessions", "MSnID",
                   # this removes other proteins mapped to 
                   # peptides from prior justified proteins
                   res_prior <- x_prior[accession %in% prior]
+                  
+                  # Apply razor rule to prior as well
+                  if (refine_prior) {
+                      res_prior <- infer_acc(res_prior)
+                  }
+                  
                   # key step. the slowest
                   res_current <- infer_acc(x_current)
                   #
