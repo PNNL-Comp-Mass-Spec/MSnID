@@ -36,8 +36,11 @@ fetch_conversion_table <- function(organism_name, from, to, backend="AnnotationH
     if(!(from %in% AnnotationDbi::columns(db))){
         wrong_column_name(from)
     }
-    if(!(to %in% AnnotationDbi::columns(db))){
-        wrong_column_name(to)
+    # `to` can be multiple columns
+    for (i in seq_along(to)) {
+        if(!(to[i] %in% AnnotationDbi::columns(db))){
+            wrong_column_name(to[i])
+        }
     }
     
     # main call
