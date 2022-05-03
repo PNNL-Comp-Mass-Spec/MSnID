@@ -15,6 +15,7 @@ fetch_conversion_table <- function(organism_name, from, to,
     }
   }
   
+  # vectorize
   wrong_column_name <- Vectorize(FUN = wrong_column_name)
   
   ah <- AnnotationHub()
