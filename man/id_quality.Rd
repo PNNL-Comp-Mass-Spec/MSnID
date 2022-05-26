@@ -9,7 +9,7 @@
 }
 
 \usage{
-    id_quality(object, filter=NULL, level=c("PSM", "peptide", "accession"))
+    id_quality(object, filter=NULL, level=c("PSM", "peptide", "accession", "SiteID"))
 }
 
 \arguments{
@@ -21,6 +21,9 @@
     \item{level}{
         Level at which the filter will be evaluated. Possible values are
         "PSM", "peptide" and "accession". Multiple are OK. Default is all of them.
+        We added a new level - "SiteID". This type of level is available only
+        after running \code{\link{map_mode_sites}} method and makes sense only
+        for PTMs.
     }
 }
 

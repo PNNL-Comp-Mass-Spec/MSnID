@@ -189,7 +189,7 @@ setMethod(
     }
 )
 
-.id_quality <- function(object, .Level=c("PSM", "peptide", "accession"))
+.id_quality <- function(object, .Level=c("PSM", "peptide", "accession", "SiteID"))
 {
     #
     .Level <- match.arg(.Level)
@@ -222,13 +222,15 @@ setMethod(
     signature(object="MSnID"),
     definition=function(object,
                         filter=NULL,
-                        level=c("PSM", "peptide", "accession"))
+                        level=c("PSM", "peptide", "accession", "SiteID"))
     {
         if(!is.null(filter))
             object <- apply_filter(object, filter)
         # if no filter has been provided just return the quality of
         # features in original object
         level <- match.arg(level, several.ok = TRUE)
+        if(!("SiteID" %in% names(object)))
+           level <- setdiff(level, "SiteID")
         out <- t(sapply(level, .id_quality, object=object))
         return(out)
     }
@@ -240,10 +242,12 @@ setMethod(
     signature(object="MSnID"),
     definition=function(object,
                         filter,
-                        level=c("PSM", "peptide", "accession"))
+                        level=c("PSM", "peptide", "accession", "SiteID"))
     {
         level <- match.arg(level, several.ok = TRUE)
         object <- apply_filter(object, filter)
+        if(!("SiteID" %in% names(object)))
+           level <- setdiff(level, "SiteID")
         out <- t(sapply(level, .id_quality, object=object))
         return(out)
     }
