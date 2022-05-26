@@ -134,7 +134,7 @@ setMethod("optimize_filter",
 {
     method <- match.arg(method, choices=c("Grid", "Nelder-Mead", "SANN"))
     # several is not OK below for match.arg !
-    level <- match.arg(level, choices=c("PSM", "peptide", "accession"))
+    level <- match.arg(level, choices=c("PSM", "peptide", "accession", "SiteID"))
     #
     # subset msnidObj to only relevant columns
     if(level == "PSM"){

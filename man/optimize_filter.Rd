@@ -37,6 +37,9 @@
     \item{level}{
         Determines at what level to perform optimization. 
         Possible values are "PSM", "peptides" or "accession".
+        We added a new level - "SiteID". This type of level is available only
+        after running \code{\link{map_mode_sites}} method and makes sense only
+        for PTMs.
     }
     \item{n.iter}{
         For method "Grid" is approxomate number of evaluation point. 
