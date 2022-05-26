@@ -395,7 +395,10 @@ setMethod(
             silent=TRUE)
 
         # show data quality at three levels
-        for(i in c("PSM", "peptide", "accession")){
+        levels <- c("PSM", "peptide", "accession")
+        if("SiteID" %in% names(object))
+           levels <- c("PSM", "peptide", "SiteID", "accession")
+        for(i in levels){
             try({
                 temp <- .id_quality(object, i)
                 cat("#", i, "s: ", temp['n'], " at ",
