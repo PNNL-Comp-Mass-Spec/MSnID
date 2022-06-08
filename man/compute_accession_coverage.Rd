@@ -11,7 +11,8 @@ Given a list of accession and peptide pairs, computes the proportion of amino ac
     compute_accession_coverage(object,
                                fasta,
                                accession_col="accession",
-                               pepSeq_col="pepSeq")
+                               pepSeq_col="pepSeq",
+                               remove_nonmapping_peptides = TRUE)
 }
 
 
@@ -29,6 +30,10 @@ Given a list of accession and peptide pairs, computes the proportion of amino ac
     \item{pepSeq_col}{
         (character) Name of the peptide sequence column.
     }
+    \item{remove_nonmapping_peptides}{
+        (boolean) Default it TRUE. If set to FALSE and non-mapped peptides are 
+        present, there will be an error.
+    }
 }
 
 \value{
@@ -36,7 +41,7 @@ An object of class MSnID with additional column `percentAACoverage` that contain
 }
 
 \author{
-Tyler Sagendorf, Michael Nestor
+Tyler Sagendorf, Michael Nestor, Vlad Petyuk
 }
 
 

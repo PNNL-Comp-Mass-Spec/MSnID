@@ -47,7 +47,8 @@ setGeneric("compute_accession_coverage",
            function(object,
                     fasta,
                     accession_col="accession",
-                    pepSeq_col="pepSeq")
+                    pepSeq_col="pepSeq",
+                    remove_nonmapping_peptides = TRUE)
              standardGeneric("compute_accession_coverage"))
 
 

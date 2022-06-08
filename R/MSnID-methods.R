@@ -805,13 +805,17 @@ setMethod("compute_accession_coverage", "MSnID",
           definition=function(object, 
                               fasta,
                               accession_col="accession",
-                              pepSeq_col="pepSeq")
+                              pepSeq_col="pepSeq",
+                              remove_nonmapping_peptides = TRUE)
           {
               
               # ids <- psms(object)
               
-              object <- .compute_accession_coverage(object, fasta,
-                                                 accession_col, pepSeq_col)
+              object <- .compute_accession_coverage(object, 
+                                                    fasta,
+                                                    accession_col, 
+                                                    pepSeq_col, 
+                                                    remove_nonmapping_peptides)
               
               # psms(object) <- res
               return(object)

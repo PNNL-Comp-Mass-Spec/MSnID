@@ -2,7 +2,8 @@
 .compute_accession_coverage <- function(object,
                                         fasta,
                                         accession_col,
-                                        pepSeq_col) 
+                                        pepSeq_col,
+                                        remove_nonmapping_peptides) 
 {
   # Clean up on exit - optional, but frees up memory
   on.exit(rm(list = ls()))
@@ -47,6 +48,11 @@
   msms.dt[, start := as.numeric(stringr::str_locate(pattern = get(pepSeq_col),
                                                     string = seq)[, 1]),
           by = accession_col][, peptide_width := nchar(get(pepSeq_col))]
+  
+  # Safety feature. At this point we aren't sure how to handle peptides 
+  # that are missing besides removing them.
+  if(remove_nonmapping_peptides)
+     msms.dt <- msms.dt[!is.na(start)]
   
   # Create IRanges object to calculate overlap
   irl <- IRanges(start = msms.dt[, start],
