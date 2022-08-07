@@ -10,108 +10,108 @@ utils::globalVariables(c("Last_AA_First",
 
 
 
-.plot_protein_coverage <- function(object, 
-                                   accession, 
-                                   peptide_fill = "spectral.counts", 
-                                   save_plot = FALSE, 
-                                   ...){
-  
-  # Check that peptide_fill is valid
-  if (!(peptide_fill %in% c(colnames(psms(object)), 
-                            "spectral.counts", "sample.counts"))) {
-    stop(paste("peptide_fill must be 'spectral.counts', 'sample.counts',",
-               "or a column in psms(object)."))
-  } else {
-    if (peptide_fill == "sample.counts") {
-      if (!("Dataset" %in% colnames(psms(object)))) {
-        stop(paste("If peptide_fill = 'sample.counts', 'Dataset' must",
-                   "be a column in psms(object)."))
-      }
-    }
-  }
-  
-  x <- psms(object) %>%
-    filter(accession == !!accession) %>%
-    select(-c(First_AA, Last_AA)) %>%
-    dplyr::rename(Last_AA = Last_AA_First,
-                  First_AA = First_AA_First)
-  
-  # remove non-mapped peptides for now
-  x <- x %>%
-    filter(!is.na(First_AA) & !is.na(Last_AA))
-  
-  prot_len <- unique(x$ProtLen)
-  
-  prot_name <- accession
-  
-  prot <- generate_counts(x, type = peptide_fill)
-  
-  # setting staggered ymin
-  min_y <- 0.1
-  step_y <- 0.033
-  width_y <- 0.025
-  
-  prot$ymin <- min_y
-  if(nrow(prot) > 1){
-    for(i in 2:nrow(prot)){
-      current_y <- min_y
-      while(TRUE){
-        # is there a conflict
-        max_last_residue <- prot %>%
-          dplyr::slice(1:(i-1)) %>%
-          dplyr::filter(ymin == current_y) %>%
-          pull(Last_AA) %>%
-          max()
-        if(max_last_residue + 0 >= prot[i,"First_AA",drop=TRUE]){
-          current_y <- current_y + step_y
-        }else{
-          break()
-        }
-      }
-      prot[i,"ymin"] <- current_y
-    }
-  }
-  
-  
-  prot$ymax <- prot$ymin + width_y
-  p <- ggplot(data = prot) +
-    geom_rect(aes(xmin = 0, xmax = prot_len + 2, 
-                  ymin = -0.04, ymax = +0.04)) +
-    geom_rect(aes(xmin = First_AA, xmax = Last_AA, 
-                  ymin = ymin, ymax = ymax, 
-                  fill = !!sym(peptide_fill)),
-              color = "white", size = 1)
-  
-  if (peptide_fill %in% c("sample.counts", "spectral.counts")) {
-    p <- p + scale_fill_viridis_c(option = "D")
-  }
-  
-  p <- p +    
-    ylab(NULL) +
-    xlab("residue") +
-    theme_classic() +
-    theme(axis.ticks.y = element_blank(), 
-          axis.text.y = element_blank(), 
-          axis.line.y = element_blank(),
-          axis.line.x = element_blank()) +
-    # scale_x_continuous(breaks = seq(0,prot_len,20)) +
-    scale_x_continuous(breaks = breaks_pretty(n = 30)(seq(0, prot_len + 2, 20))) +
-    theme(axis.text.x = element_text(angle=90, hjust = 1, vjust = 0.5),
-          plot.title = element_text(hjust = 0.5, size=16)) +
-    ggtitle(prot_name)
-  
-  if(max(prot$ymax) < 0.5) {
-    p <- p + ylim(-0.04, 0.5)
-  }
-  
-  if(save_plot){
-    file_name <- gsub(", ", "_", prot_name)
-    file_name <- gsub("\\|", "_", file_name) # OneDrive does not allow pipes
-    ggsave(filename = paste0(file_name,".png"), plot = p)
-  }else{
-    return(p)
-  }
-}
+# .plot_protein_coverage <- function(object, 
+#                                    accession, 
+#                                    peptide_fill = "spectral.counts", 
+#                                    save_plot = FALSE, 
+#                                    ...){
+#   
+#   # Check that peptide_fill is valid
+#   if (!(peptide_fill %in% c(colnames(psms(object)), 
+#                             "spectral.counts", "sample.counts"))) {
+#     stop(paste("peptide_fill must be 'spectral.counts', 'sample.counts',",
+#                "or a column in psms(object)."))
+#   } else {
+#     if (peptide_fill == "sample.counts") {
+#       if (!("Dataset" %in% colnames(psms(object)))) {
+#         stop(paste("If peptide_fill = 'sample.counts', 'Dataset' must",
+#                    "be a column in psms(object)."))
+#       }
+#     }
+#   }
+#   
+#   x <- psms(object) %>%
+#     filter(accession == !!accession) %>%
+#     select(-c(First_AA, Last_AA)) %>%
+#     dplyr::rename(Last_AA = Last_AA_First,
+#                   First_AA = First_AA_First)
+#   
+#   # remove non-mapped peptides for now
+#   x <- x %>%
+#     filter(!is.na(First_AA) & !is.na(Last_AA))
+#   
+#   prot_len <- unique(x$ProtLen)
+#   
+#   prot_name <- accession
+#   
+#   prot <- generate_counts(x, type = peptide_fill)
+#   
+#   # setting staggered ymin
+#   min_y <- 0.1
+#   step_y <- 0.033
+#   width_y <- 0.025
+#   
+#   prot$ymin <- min_y
+#   if(nrow(prot) > 1){
+#     for(i in 2:nrow(prot)){
+#       current_y <- min_y
+#       while(TRUE){
+#         # is there a conflict
+#         max_last_residue <- prot %>%
+#           dplyr::slice(1:(i-1)) %>%
+#           dplyr::filter(ymin == current_y) %>%
+#           pull(Last_AA) %>%
+#           max()
+#         if(max_last_residue + 0 >= prot[i,"First_AA",drop=TRUE]){
+#           current_y <- current_y + step_y
+#         }else{
+#           break()
+#         }
+#       }
+#       prot[i,"ymin"] <- current_y
+#     }
+#   }
+#   
+#   
+#   prot$ymax <- prot$ymin + width_y
+#   p <- ggplot(data = prot) +
+#     geom_rect(aes(xmin = 0, xmax = prot_len + 2, 
+#                   ymin = -0.04, ymax = +0.04)) +
+#     geom_rect(aes(xmin = First_AA, xmax = Last_AA, 
+#                   ymin = ymin, ymax = ymax, 
+#                   fill = !!sym(peptide_fill)),
+#               color = "white", size = 1)
+#   
+#   if (peptide_fill %in% c("sample.counts", "spectral.counts")) {
+#     p <- p + scale_fill_viridis_c(option = "D")
+#   }
+#   
+#   p <- p +    
+#     ylab(NULL) +
+#     xlab("residue") +
+#     theme_classic() +
+#     theme(axis.ticks.y = element_blank(), 
+#           axis.text.y = element_blank(), 
+#           axis.line.y = element_blank(),
+#           axis.line.x = element_blank()) +
+#     # scale_x_continuous(breaks = seq(0,prot_len,20)) +
+#     scale_x_continuous(breaks = breaks_pretty(n = 30)(seq(0, prot_len + 2, 20))) +
+#     theme(axis.text.x = element_text(angle=90, hjust = 1, vjust = 0.5),
+#           plot.title = element_text(hjust = 0.5, size=16)) +
+#     ggtitle(prot_name)
+#   
+#   if(max(prot$ymax) < 0.5) {
+#     p <- p + ylim(-0.04, 0.5)
+#   }
+#   
+#   if(save_plot){
+#     file_name <- gsub(", ", "_", prot_name)
+#     file_name <- gsub("\\|", "_", file_name) # OneDrive does not allow pipes
+#     ggsave(filename = paste0(file_name,".png"), plot = p)
+#   }else{
+#     return(p)
+#   }
+# }
 
 
 
@@ -141,4 +141,128 @@ generate_counts <- function(x, type) {
   
   return(x)
 }
+
+
+
+
+
+
+
+
+.plot_protein_coverage <- function (object, 
+                                      accession, 
+                                      peptide_fill = "spectral.counts", 
+                                      name_from = c("accession"),
+                                      border_size = NULL,
+                                      border_color = "white",
+                                      aa_step = NULL,
+                                      save_plot = FALSE, ...) 
+{
+   if (!(peptide_fill %in% c(colnames(psms(object)), "spectral.counts", 
+                             "sample.counts"))) {
+      stop(paste("peptide_fill must be 'spectral.counts', 'sample.counts',", 
+                 "or a column in psms(object)."))
+   }
+   else {
+      if (peptide_fill == "sample.counts") {
+         if (!("Dataset" %in% colnames(psms(object)))) {
+            stop(paste("If peptide_fill = 'sample.counts', 'Dataset' must", 
+                       "be a column in psms(object)."))
+         }
+      }
+   }
+   x <- psms(object) %>% filter(accession == !!accession) %>% 
+      select(-c(First_AA, Last_AA)) %>% dplyr::rename(Last_AA = Last_AA_First, 
+                                                      First_AA = First_AA_First)
+   x <- x %>% filter(!is.na(First_AA) & !is.na(Last_AA))
+   prot_len <- unique(x$ProtLen)
+   prot <- generate_counts(x, type = peptide_fill)
+   min_y <- 0.03
+   step_y <- 0.033
+   width_y <- 0.04
+   prot$ymin <- min_y
+   if (nrow(prot) > 1) {
+      for (i in 2:nrow(prot)) {
+         current_y <- min_y
+         while (TRUE) {
+            max_last_residue <- prot %>% dplyr::slice(1:(i - 1)) %>% 
+               dplyr::filter(ymin == current_y) %>% 
+               pull(Last_AA) %>% 
+               max()
+            if (max_last_residue + 0 >= prot[i, "First_AA", drop = TRUE]) {
+               current_y <- current_y + step_y
+            }
+            else {
+               (break)()
+            }
+         }
+         prot[i, "ymin"] <- current_y
+      }
+   }
+   
+   if (is.null(border_size)) {
+      border_size <- 1.5/log10(prot_len)
+   }
+   
+   
+   prot_name_cols <- filter(x, accession == !!accession) %>%
+      dplyr::distinct_(.dots=name_from)
+   if(nrow(prot_name_cols) == 1){
+      prot_name <- paste0(prot_name_cols, collapse = ", ")
+   }else{
+      stop("name_from  isn't unique!")
+   }
+   
+   
+   prot$ymax <- prot$ymin + width_y
+   p <- ggplot(data = prot) + 
+      geom_rect(aes(xmin = 1 - 0.5, xmax = prot_len + 0.5, 
+                    ymin = -0.02, ymax = +0.02)) +
+      geom_rect(aes(xmin = First_AA - 0.5, 
+                    xmax = Last_AA - 0.5, 
+                    ymin = ymin, 
+                    ymax = ymax, 
+                    fill = !!rlang::sym(peptide_fill)), 
+                color = border_color, 
+                size = border_size)
+   
+   if (peptide_fill %in% c("sample.counts", "spectral.counts")) {
+      p <- p + scale_fill_viridis_c(option = "D")
+   }
+   
+   if(is.null(aa_step)){
+      # seq_breaks <- breaks_pretty(n = 30)(seq(0, prot_len + 2, 20))
+      seq_breaks <- breaks_pretty(n = 30)(c(0, prot_len))
+      seq_breaks[1] <- 1
+      seq_breaks <- seq_breaks[seq_breaks <= prot_len]
+   }else{
+      seq_breaks <- c(1, seq(aa_step, prot_len, aa_step))
+   }
+   
+   p <- p + ylab(NULL) + xlab("residue") + theme_classic() + 
+      theme(axis.ticks.y = element_blank(), axis.text.y = element_blank(), 
+            axis.line.y = element_blank(), axis.line.x = element_blank()) + 
+      scale_x_continuous(breaks = seq_breaks) + 
+      theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5), 
+            plot.title = element_text(hjust = 0.5, size = 16)) + 
+      ggtitle(prot_name)
+   
+   # if (max(prot$ymax) < 0.5) {
+   #    y_lim <- c(-0.02, 0.5)
+   # }
+   
+   p <- p + ggplot2::scale_y_continuous(expand = ggplot2::expansion(mult = 0, add=c(0, 0.4)))
+   
+   if (save_plot) {
+      file_name <- gsub(", ", "_", prot_name)
+      file_name <- gsub("\\|", "_", file_name)
+      ggsave(filename = paste0(file_name, ".png"), plot = p)
+   }
+   else {
+      return(p)
+   }
+}
+
+
+
 

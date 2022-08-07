@@ -827,10 +827,13 @@ setMethod("compute_accession_coverage", "MSnID",
 setMethod("plot_protein_coverage",
           signature(object="MSnID", accession="character"),
           definition = function(object, accession, 
-                                peptide_fill = "spectral.counts", ...)
+                                # peptide_fill = "spectral.counts", 
+                                ...)
           {
-              .plot_protein_coverage(object, accession, 
-                                     peptide_fill, ...)
+              .plot_protein_coverage(object, 
+                                     accession, 
+                                     # peptide_fill, 
+                                     ...)
           }
 )
 

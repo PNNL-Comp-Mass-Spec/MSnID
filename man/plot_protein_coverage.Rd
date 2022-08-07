@@ -11,7 +11,11 @@ Shows the peptide location(s) on the protein sequence.
     plot_protein_coverage(object, 
                           accession, 
                           peptide_fill = "spectral.counts",
-                          %save_plot = FALSE,
+                          name_from = c("accession"),
+                          border_size = NULL,
+                          border_color = "white",
+                          aa_step = NULL,
+                          save_plot = FALSE,
                           ...)
 }
 
@@ -27,14 +31,33 @@ Shows the peptide location(s) on the protein sequence.
         (string) "spectral.counts", "sample.counts", or a column from 
         \code{psms(object)} used to fill the peptide bars.
     }
-    \item{...}{
-        Used for passing save_plot. If \code{TRUE}, then image is saved as a 
-        PNG file.
+    \item{name_from}{
+        (string) column sources for the plot title.
     }
-%    \item{save_plot}{
-%        (boolean) if TRUE, the plot is saved as png file.
+    \item{border_size}{
+        (numeric) controls the border around the peptide rectangles.
+        In case of NULL, computes the value based on the protein length.
+    }
+    \item{border_color}{
+        (character) color around peptide rectangles.
+    }
+    \item{aa_step}{
+        (numeric) interval for the tickmarks along the protein sequence.
+        In case of default (NULL) the tickmars are precomputed using 
+        \code{breaks_pretty(30)}
+    }
+%    \item{...}{
+%        Used for passing save_plot. If \code{TRUE}, then image is saved as a 
+%        PNG file.
 %    }
+    \item{save_plot}{
+        (boolean) if TRUE, the plot is saved as png file.
+    }
 }
+
+
+
+
 
 \value{
     if save_plot = FALSE, then returns ggplot2 object

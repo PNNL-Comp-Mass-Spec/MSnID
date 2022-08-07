@@ -2,7 +2,7 @@ Package: MSnID
 Type: Package
 Title: Utilities for Exploration and Assessment of Confidence of
     LC-MSn Proteomics Identifications
-Version: 1.25.1
+Version: 1.25.2
 Encoding: UTF-8
 Authors@R: c(person(given = "Vladislav", family = "Petyuk",
                     email = "vladislav.petyuk@pnnl.gov",
