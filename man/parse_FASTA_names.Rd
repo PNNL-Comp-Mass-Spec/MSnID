@@ -9,22 +9,24 @@ Create table from UniProt FASTA headers
 Separate the elements of UniProt FASTA headers into columns of a \code{data.frame}.
 }
 
-\usage{parse_FASTA_names(path_to_FASTA)}
+\usage{parse_FASTA_names(path_to_FASTA, database = c("uniprot", "gencode"))}
 
 \arguments{
   \item{path_to_FASTA}{path to UniProt FASTA file.}
+  \item{database}{database from which the FASTA file was derived. Currently accepts "uniprot" (default) or "gencode". Not case-sensitive.}
 }
 
 \value{
-\code{data.frame} with the following columns: feature, database, uniprot_acc, isoform, entry_name, description, organism, organism_id, gene, protein_existence, and sequence_version.
+\code{data.frame} with database-specific columns for each component of the FASTA header.
 }
 
 \seealso{
-\href{https://www.uniprot.org/help/fasta-headers}{UniProt FASTA headers}
+\href{https://www.uniprot.org/help/fasta-headers}{UniProt FASTA headers},
+\href{https://www.gencodegenes.org/pages/data_format.html}{GENCODE Data Format}
 }
 
 \author{
-Tyler Sagendorf
+Tyler Sagendorf, Bennett Drucker
 }
 
 \examples{
