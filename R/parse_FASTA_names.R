@@ -63,9 +63,7 @@ parse_FASTA_names <- function(path_to_FASTA,
   out[, num_cols] <- out[, lapply(.SD, as.numeric), .SDcols = num_cols]
   
   # Remove columns with all missing values
-  out <- out[, which(unlist(
-    lapply(out, function(x) { !all(is.na(x)) })
-  )), with = FALSE]
+  out <- out[, colSums(!is.na(out)) != 0, with = FALSE]
   
   setDF(out)
   
