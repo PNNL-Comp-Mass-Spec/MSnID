@@ -8,8 +8,7 @@ import("iterators")
 import("data.table")
 importFrom("dplyr", "group_by", "summarise", "select", "%>%", "inner_join",
            "left_join", "rename", "mutate", "filter", "group_by_at", "distinct", 
-           "top_n", "pull", "tally", "ungroup", "arrange", "n", "across", 
-           "everything")
+           "top_n", "pull", "tally", "ungroup", "arrange", "n")
 importFrom("rlang", "!!", "sym")
 importFrom("tibble", "rownames_to_column")
 importFrom("stringi", "stri_reverse")
