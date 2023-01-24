@@ -11,6 +11,7 @@ test_parse_FASTA_names <- function() {
                 "sp|Q920B6-4|KCNK2_RAT", "sp|Q9WUW9|S1C2A_RAT", 
                 "sp|Q6PCU8|NDUV3_RAT", "sp|O35509|RB11B_RAT"),
     database = "sp", 
+    unique_id = c("P61943", "P56576", "Q920B6-4", "Q9WUW9", "Q6PCU8", "O35509"),
     uniprot_acc = c("P61943", "P56576", "Q920B6", "Q9WUW9", "Q6PCU8", "O35509"),
     isoform = c(rep(NA, 2), 4, rep(NA, 3)),
     entry_name = c("SIA10_RAT", "UH11_RAT", "KCNK2_RAT", "S1C2A_RAT", 

@@ -9,86 +9,69 @@ parse_FASTA_names <- function(path_to_FASTA,
   # Get FASTA headers
   fasta_names <- names(readAAStringSet(path_to_FASTA))
   
+  # Remove contaminants
+  fasta_names <- fasta_names[!grepl("^contaminant", fasta_names, 
+                                    ignore.case = TRUE)]
+  
   if (database == "uniprot") {
-    # Pattern for first 6 columns
-    pttrn <- "(.*)\\|(.*)\\|([^ ]+) (.*) OS=(.*) OX=(\\d+).*"
+    pttrn <- "(?<header>(?<feature>^(?<database>[^\\|]+)\\|(?<unique_id>(?<uniprot_acc>[^\\|-]+)-?(?<isoform>\\d*))\\|(?<entry_name>\\w+))\\s+(?<description>.*)\\s+OS=(?<organism>.*)\\s+OX=(?<organism_id>\\d+).*$)"
     
-    out <- data.frame(
-      feature = sub(" .*", "", fasta_names),
-      database = sub(pttrn, "\\1", fasta_names),
-      uniprot_acc = sub(pttrn, "\\2", fasta_names),
-      entry_name = sub(pttrn, "\\3", fasta_names),
-      description = sub(pttrn, "\\4", fasta_names),
-      organism = sub(pttrn, "\\5", fasta_names),
-      organism_id = sub(pttrn, "\\6", fasta_names),
-      # These last 3 may not be present, so we use separate regex
-      gene = sub(".* GN=([^ ]+).*", "\\1", fasta_names),
-      protein_existence = sub(".* PE=(\\d+).*", "\\1", fasta_names),
-      sequence_version = sub(".* SV=(\\d+)$", "\\1", fasta_names)
-    ) %>%
-      mutate(
-        isoform = str_extract(uniprot_acc, "(?<=-)\\d+"),
-        uniprot_acc = sub("-.*", "", uniprot_acc),
-        # By default, a failed match uses the original string.
-        # Replace with NA
-        across(
-          .cols = everything(),
-          .fns = ~ ifelse(.x == fasta_names, NA, .x)
-        )
-      ) %>%
-      # Remove entries that do not follow the format (no database entry)
-      dplyr::filter(!is.na(database)) %>%
-      # Convert these columns from character to numeric
-      mutate(across(
-        .cols = c(
-          isoform, protein_existence,
-          sequence_version, organism_id
-        ),
-        .fns = as.numeric
-      )) %>%
-      # Reorder columns
-      dplyr::select(feature, database, uniprot_acc, isoform, everything())
+    m <- regexec(pattern = pttrn, text = fasta_names, perl = TRUE)
+    out <- do.call(rbind, lapply(regmatches(fasta_names, m), `[`, -1L))
+    out <- as.data.table(out)
+    
+    # Additional columns 
+    # (Including positive lookbehind in pttrn removes isoform rows...)
+    out[, `:=`(
+      gene = sub(".*(?<=GN=)(\\S+).*", "\\1", header, perl = TRUE),
+      protein_existence = sub(".*(?<=PE=)(\\d+).*", "\\1", header, perl = TRUE),
+      sequence_version = sub(".*(?<=SV=)(\\d+)", "\\1", header, perl = TRUE),
+      header = NULL
+    )]
+    
+    # Convert these columns to numeric
+    num_cols <- c("isoform", "protein_existence", 
+                  "sequence_version", "organism_id")
     
   } else if (database == "gencode") {
+    # Expect 8 sections separated by pipe
     pttrn <- paste(rep("([^\\|]+)", times = 8), collapse = "\\|")
-    pttrn <- paste0(pttrn, "(.*$)")
+    pttrn <- paste0(pttrn, ".*") # account for any additional information
     
-    out <- data.table(value = fasta_names)
-    out[, `:=`(
-      protein_id = sub(pttrn, "\\1", value),
-      transcript_id = sub(pttrn, "\\2", value),
-      gene_id = sub(pttrn, "\\3", value),
-      havana_gene = sub(pttrn, "\\4", value),
-      havana_transcript = sub(pttrn, "\\5", value),
-      transcript = sub(pttrn, "\\6", value),
-      gene = sub(pttrn, "\\7", value),
-      prot_length = as.numeric(sub(pttrn, "\\8", value)),
-      extra_info = sub(pttrn, "\\9", value),
-      value = NULL
-    )]
-    # Clean up columns
-    out[out == "" | out == "-"] <- NA
-    # Remove columns with all missing values
-    out <- out[, which(unlist(
-      lapply(out, function(x) !all(is.na(x)))
-    )), with = FALSE]
-    out <- as.data.frame(out)
+    # Much faster than calling sub() separately for each column
+    m <- regexec(pattern = pttrn, text = fasta_names)
+    out <- do.call(rbind, lapply(regmatches(fasta_names, m), `[`, -1L))
+    out <- as.data.table(out)
+    colnames(out) <- c("protein_id", "transcript_id", "gene_id", "havana_gene", 
+                       "havana_transcript", "transcript", "gene", 
+                       "protein_length")
+    
+    # Convert these columns to numeric
+    num_cols <- c("protein_length")
   }
+  
+  # Replace failed matches with NA
+  for (j in seq_along(out)) {
+    set(out, i = which(out[[j]] %in% c(fasta_names, "-", "")), j = j, 
+        value = NA)
+  }
+  
+  # Remove rows with all missing values
+  out <- out[rowSums(!is.na(out)) != 0, ]
+  
+  # Convert certain columns to numeric
+  out[, num_cols] <- out[, lapply(.SD, as.numeric), .SDcols = num_cols]
+  
+  # Remove columns with all missing values
+  out <- out[, colSums(!is.na(out)) != 0, with = FALSE]
+  
+  setDF(out)
   
   return(out)
 }
 
 
 utils::globalVariables(
-  c(
-    "uniprot_acc",
-    "database",
-    "isoform",
-    "feature",
-    "protein_existence",
-    "sequence_version",
-    "organism_id",
-    "value"
-  )
+  c("header")
 )
 
