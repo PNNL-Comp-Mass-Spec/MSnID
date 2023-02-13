@@ -28,6 +28,10 @@ modification resulting in \{protein ID\}-\{aa\}\{aa position\}.
         (string) Name of the column with accession/protein IDs in the 
         MSnID object. Default is "accession".
     }
+    \item{peptide_col}{
+        (string) Name of the column with peptide sequences in the 
+        MSnID object. Default is "peptide".
+    }
 }
 
 \value{

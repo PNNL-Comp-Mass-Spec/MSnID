@@ -229,9 +229,9 @@ utils::globalVariables(c(".", "trimmedPeptide", "x",
 
 
 
-.map_peptide_position <- function(object, fasta, accession_col = "accession"){
+.map_peptide_position <- function(object, fasta, accession_col = "accession", peptide_col = "peptide"){
     
-    object <- .make_clean_seq(object, "peptide")
+    object <- .make_clean_seq(object, peptide_col)
     x <- psms(object)
     
     # protein ID in `accession`
