@@ -31,7 +31,9 @@ setGeneric("map_mod_sites",
 setGeneric("map_peptide_position",
            function(object,
                     fasta,
-                    accession_col = "accession")
+                    accession_col = "accession",
+                    peptide_col = "peptide",
+                    ...)
                standardGeneric("map_peptide_position"))
 
 

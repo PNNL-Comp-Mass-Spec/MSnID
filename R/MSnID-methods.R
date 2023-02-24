@@ -768,9 +768,10 @@ setMethod("map_peptide_position", "MSnID",
           definition=function(object, 
                               fasta, 
                               accession_col = "accession",
-                              peptide_col = "peptide")
+                              peptide_col = "peptide",
+                              ...)
           {
-              object <- .map_peptide_position(object, fasta, accession_col)
+              object <- .map_peptide_position(object, fasta, accession_col, peptide_col, ...)
               return(object)
           }
 )

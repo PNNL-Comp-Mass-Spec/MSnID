@@ -11,7 +11,8 @@ modification resulting in \{protein ID\}-\{aa\}\{aa position\}.
 \usage{
     map_peptide_position(object,
                         fasta, 
-                        accession_col = "accession")
+                        accession_col = "accession",
+                        peptide_col = "peptide")
 }
 
 
@@ -31,6 +32,9 @@ modification resulting in \{protein ID\}-\{aa\}\{aa position\}.
     \item{peptide_col}{
         (string) Name of the column with peptide sequences in the 
         MSnID object. Default is "peptide".
+    }
+    \item{...}{
+        not currently used.
     }
 }
 
